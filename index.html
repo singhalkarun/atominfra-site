@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Atom Infra — Ambition Forge Private Limited</title>
+<meta name="description" content="Ambition Forge Private Limited builds products for people who do hard things.">
+<style>
+  :root { --page:#FFFFFF; --ink:#17181A; --muted:#85888C; --border:#E9EAEB; --accent:#1C7A57; }
+  @media (prefers-color-scheme: dark) {
+    :root { --page:#0E0F11; --ink:#ECEDEF; --muted:#8B8E93; --border:#242629; --accent:#3BAE82; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--page); color: var(--ink);
+    font: 17px/1.65 -apple-system, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+    display: flex; min-height: 100svh; }
+  main { max-width: 640px; margin: auto; padding: 64px 24px; width: 100%; }
+  .brand { font-size: 15px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--muted); }
+  h1 { font-size: clamp(30px, 6vw, 44px); font-weight: 800; letter-spacing: -0.03em;
+    line-height: 1.12; margin: 18px 0 14px; text-wrap: balance; }
+  .lede { color: var(--muted); font-size: 18px; max-width: 46ch; margin: 0 0 44px; }
+  .product { display: block; border: 1px solid var(--border); border-radius: 16px;
+    padding: 20px 22px; text-decoration: none; color: inherit; margin-bottom: 44px;
+    transition: border-color 0.15s ease; }
+  .product:hover { border-color: var(--ink); }
+  .pk { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; color: var(--accent);
+    text-transform: uppercase; }
+  .pt { font-size: 20px; font-weight: 700; letter-spacing: -0.02em; margin: 6px 0 4px; }
+  .pd { color: var(--muted); font-size: 15px; margin: 0; }
+  footer { border-top: 1px solid var(--border); padding-top: 20px; color: var(--muted);
+    font-size: 14px; }
+  footer a { color: var(--ink); text-decoration: none; font-weight: 600; }
+  footer a:hover { text-decoration: underline; }
+  .legal { margin-top: 6px; font-size: 13px; }
+</style>
+</head>
+<body>
+<main>
+  <div class="brand">Atom Infra</div>
+  <h1>We forge products for people who do hard things.</h1>
+  <p class="lede">A small product studio. We build focused, carefully made software — and ship it only when it's right.</p>
+
+  <a class="product" href="https://sidequesting.club">
+    <div class="pk">Now live</div>
+    <div class="pt">SideQuesting</div>
+    <p class="pd">Real-world quests, daily goals, and people who keep you honest. Do hard things, every day.</p>
+  </a>
+
+  <footer>
+    <div>Contact: <a href="mailto:hello@atominfra.com">hello@atominfra.com</a></div>
+    <div class="legal">Ambition Forge Private Limited · India</div>
+  </footer>
+</main>
+</body>
+</html>

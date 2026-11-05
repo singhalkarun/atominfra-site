@@ -3,54 +3,287 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Atom Infra — Ambition Forge Private Limited</title>
-<meta name="description" content="Ambition Forge Private Limited builds products for people who do hard things.">
+<title>atominfra — Private cloud machines for you and your coding agent</title>
+<meta name="description" content="atominfra gives you a private Lane of virtual machines: Boxes you SSH into and GitHub Actions runners for your repos, all driven by one CLI, af, that you and your coding agent share.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="canonical" href="https://atominfra.com/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://atominfra.com/">
+<meta property="og:title" content="atominfra — Private cloud machines for you and your coding agent">
+<meta property="og:description" content="Boxes you SSH into and GitHub Actions runners, in a Lane only you can reach, driven by one CLI: af.">
+<meta name="theme-color" content="#14161f">
 <style>
-  :root { --page:#FFFFFF; --ink:#17181A; --muted:#85888C; --border:#E9EAEB; --accent:#1C7A57; }
+  :root {
+    --page:#ffffff; --raised:#f6f7fb; --ink:#14161f; --muted:#555a70; --faint:#8c90a4;
+    --border:#e3e5ee; --accent:#5a48f0; --code-bg:#14161f; --code-ink:#eceef4;
+    --grad: linear-gradient(120deg, #7c6cff 0%, #5b8cff 45%, #22d3ee 100%);
+  }
   @media (prefers-color-scheme: dark) {
-    :root { --page:#0E0F11; --ink:#ECEDEF; --muted:#8B8E93; --border:#242629; --accent:#3BAE82; }
+    :root {
+      --page:#14161f; --raised:#1b1e2c; --ink:#eceef4; --muted:#a5a9bb; --faint:#8c90a4;
+      --border:#2a2e42; --accent:#9d91ff; --code-bg:#0e1017; --code-ink:#eceef4;
+    }
   }
   * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
   body { margin: 0; background: var(--page); color: var(--ink);
-    font: 17px/1.65 -apple-system, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
-    display: flex; min-height: 100svh; }
-  main { max-width: 640px; margin: auto; padding: 64px 24px; width: 100%; }
-  .brand { font-size: 15px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
-    color: var(--muted); }
-  h1 { font-size: clamp(30px, 6vw, 44px); font-weight: 800; letter-spacing: -0.03em;
-    line-height: 1.12; margin: 18px 0 14px; text-wrap: balance; }
-  .lede { color: var(--muted); font-size: 18px; max-width: 46ch; margin: 0 0 44px; }
-  .product { display: block; border: 1px solid var(--border); border-radius: 16px;
-    padding: 20px 22px; text-decoration: none; color: inherit; margin-bottom: 44px;
-    transition: border-color 0.15s ease; }
-  .product:hover { border-color: var(--ink); }
-  .pk { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; color: var(--accent);
-    text-transform: uppercase; }
-  .pt { font-size: 20px; font-weight: 700; letter-spacing: -0.02em; margin: 6px 0 4px; }
-  .pd { color: var(--muted); font-size: 15px; margin: 0; }
-  footer { border-top: 1px solid var(--border); padding-top: 20px; color: var(--muted);
-    font-size: 14px; }
-  footer a { color: var(--ink); text-decoration: none; font-weight: 600; }
-  footer a:hover { text-decoration: underline; }
-  .legal { margin-top: 6px; font-size: 13px; }
+    font: 17px/1.6 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif; }
+  a { color: var(--accent); }
+  code, pre { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
+  .glow { background:
+      radial-gradient(60rem 30rem at 85% -5%, color-mix(in srgb, #7c6cff 20%, transparent), transparent 70%),
+      radial-gradient(40rem 24rem at 0% 10%, color-mix(in srgb, #22d3ee 11%, transparent), transparent 70%); }
+
+  /* Nav */
+  nav { display: flex; align-items: center; justify-content: space-between; padding: 22px 0; }
+  .logo { display: flex; align-items: center; gap: 10px; color: var(--ink); text-decoration: none;
+    font-weight: 700; font-size: 18px; letter-spacing: -0.01em; }
+  .logo img { width: 28px; height: 28px; }
+  .links { display: flex; align-items: center; gap: 22px; font-size: 15px; }
+  .links a { color: var(--muted); text-decoration: none; }
+  .links a:hover { color: var(--ink); }
+  .links .btn { color: #fff; }
+
+  /* Buttons */
+  .btn { display: inline-block; padding: 11px 20px; border-radius: 999px; font-weight: 600; font-size: 15px;
+    text-decoration: none; background: var(--accent); color: #fff; border: 1px solid transparent; }
+  @media (prefers-color-scheme: dark) { .btn { background: #7c6cff; } }
+  .btn:hover { filter: brightness(1.08); }
+  .btn.ghost { background: transparent; color: var(--ink); border-color: var(--border); }
+  .btn.ghost:hover { border-color: var(--ink); filter: none; }
+
+  /* Hero */
+  .hero { padding: 64px 0 88px; display: grid; grid-template-columns: 1.1fr 1fr; gap: 48px; align-items: center; }
+  .eyebrow { font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--faint); }
+  h1 { font-size: clamp(36px, 5.6vw, 58px); line-height: 1.06; letter-spacing: -0.035em; font-weight: 800;
+    margin: 14px 0 20px; text-wrap: balance; }
+  h1 .g { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .lede { font-size: 19px; color: var(--muted); max-width: 34rem; margin: 0 0 32px; }
+  .ctas { display: flex; gap: 12px; flex-wrap: wrap; }
+  .install { margin-top: 22px; font-size: 14px; color: var(--faint); }
+  .install code { color: var(--ink); background: var(--raised); border: 1px solid var(--border);
+    padding: 3px 8px; border-radius: 6px; }
+
+  .term { background: var(--code-bg); color: var(--code-ink); border-radius: 14px; border: 1px solid var(--border);
+    box-shadow: 0 30px 60px -30px rgba(40, 30, 120, 0.45); overflow: hidden; }
+  .term .bar { display: flex; gap: 7px; padding: 12px 14px; border-bottom: 1px solid #23263a; }
+  .term .bar i { width: 11px; height: 11px; border-radius: 50%; background: #363a4d; }
+  .term pre { margin: 0; padding: 18px 20px 22px; font-size: 13.5px; line-height: 1.7; overflow-x: auto; }
+  .p { color: #22d3ee; } .c { color: #8c90a4; } .o { color: #c4c7d4; } .k { color: #a99fff; }
+
+  /* Sections */
+  section { padding: 80px 0; border-top: 1px solid var(--border); }
+  h2 { font-size: clamp(28px, 3.6vw, 38px); letter-spacing: -0.03em; line-height: 1.15; margin: 0 0 14px; text-wrap: balance; }
+  .sub { color: var(--muted); font-size: 18px; max-width: 40rem; margin: 0 0 44px; }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .card { background: var(--raised); border: 1px solid var(--border); border-radius: 16px; padding: 24px; }
+  .card h3 { font-size: 19px; margin: 12px 0 8px; letter-spacing: -0.015em; }
+  .card p { margin: 0; color: var(--muted); font-size: 15.5px; }
+  .icon { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center;
+    background: color-mix(in srgb, #7c6cff 16%, transparent); color: var(--accent); font-weight: 800; }
+
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+  .rules { list-style: none; padding: 0; margin: 0; display: grid; gap: 14px; }
+  .rules li { padding-left: 30px; position: relative; color: var(--muted); }
+  .rules li b { color: var(--ink); font-weight: 600; }
+  .rules li::before { content: ""; position: absolute; left: 0; top: 7px; width: 16px; height: 16px; border-radius: 50%;
+    background: var(--grad); }
+  .quote { background: var(--raised); border: 1px solid var(--border); border-left: 3px solid #7c6cff;
+    border-radius: 12px; padding: 18px 20px; font-size: 16px; margin: 0 0 18px; }
+  .quote code { font-size: 14.5px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 15.5px; }
+  th, td { text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--border); }
+  th { color: var(--faint); font-weight: 600; font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; }
+  td:first-child { font-weight: 700; }
+  .note { color: var(--faint); font-size: 14px; margin-top: 14px; }
+
+  .never { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px 32px; list-style: none; padding: 0; margin: 0; }
+  .never li { color: var(--muted); padding-left: 26px; position: relative; }
+  .never li::before { content: "✕"; position: absolute; left: 0; color: var(--accent); font-weight: 700; }
+
+  .cta { text-align: center; padding: 96px 0; }
+  .cta .sub { margin: 0 auto 32px; }
+  .cta .ctas { justify-content: center; }
+
+  footer { border-top: 1px solid var(--border); padding: 32px 0 48px; color: var(--faint); font-size: 14px; }
+  footer .row { display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+  footer a { color: var(--muted); text-decoration: none; }
+  footer a:hover { color: var(--ink); }
+  footer .cols { display: flex; gap: 22px; flex-wrap: wrap; }
+
+  @media (max-width: 860px) {
+    .hero, .split { grid-template-columns: 1fr; }
+    .grid { grid-template-columns: 1fr; }
+    .never { grid-template-columns: 1fr; }
+    .links .hide-sm { display: none; }
+    .hero { padding-top: 32px; }
+  }
 </style>
 </head>
 <body>
+<div class="glow">
+  <div class="wrap">
+    <nav>
+      <a class="logo" href="/"><img src="/favicon.svg" alt="">atominfra</a>
+      <div class="links">
+        <a class="hide-sm" href="#product">Product</a>
+        <a class="hide-sm" href="#agents">For agents</a>
+        <a href="https://docs.atominfra.com/">Docs</a>
+        <a class="btn" href="mailto:hello@atominfra.com?subject=atominfra%20access">Get access</a>
+      </div>
+    </nav>
+
+    <header class="hero">
+      <div>
+        <div class="eyebrow">Private cloud machines</div>
+        <h1>Your own machines, <span class="g">for you and your coding agent.</span></h1>
+        <p class="lede">atominfra gives you a private Lane of virtual machines: Boxes you SSH into and GitHub Actions
+          runners for your repos, all driven by one CLI, <code>af</code>.</p>
+        <div class="ctas">
+          <a class="btn" href="https://docs.atominfra.com/start/getting-started/">Get started</a>
+          <a class="btn ghost" href="https://docs.atominfra.com/start/overview/">How it works</a>
+        </div>
+        <div class="install">Install: <code>npm install -g @atominfra/af</code></div>
+      </div>
+      <div class="term" aria-label="Example af session">
+        <div class="bar"><i></i><i></i><i></i></div>
+<pre><span class="p">$</span> af box create dev --size S --json
+<span class="o">{ "ok": true, "data": { "created": true, … } }</span>
+<span class="p">$</span> af box ssh dev
+<span class="c"># you're in. Snapshotted nightly, 7 days kept.</span>
+
+<span class="p">$</span> af runner create ci --size CI --json
+<span class="p">$</span> echo "$TOKEN" | af runner register ci --token - \
+    --url https://github.com/you/repo --json
+<span class="c"># token on stdin: used once, never stored</span>
+
+<span class="p">$</span> af doctor --json
+<span class="o">{ "ok": true, "data": { "healthy": <span class="k">true</span>, … } }</span></pre>
+      </div>
+    </header>
+  </div>
+</div>
+
 <main>
-  <div class="brand">Atom Infra</div>
-  <h1>We forge products for people who do hard things.</h1>
-  <p class="lede">A small product studio. We build focused, carefully made software — and ship it only when it's right.</p>
+  <section id="product">
+    <div class="wrap">
+      <h2>Everything you need to build, nothing you can't trust.</h2>
+      <p class="sub">Two kinds of machine in one private Lane, managed the same way whether you type the command or
+        your agent does.</p>
+      <div class="grid">
+        <div class="card">
+          <div class="icon">›_</div>
+          <h3>Boxes</h3>
+          <p>Linux VMs you reach over SSH, for development, long jobs and agents. Snapshotted every night, with 7 days
+            kept, and restorable in one command.</p>
+        </div>
+        <div class="card">
+          <div class="icon">▶</div>
+          <h3>Runners</h3>
+          <p>Self-hosted GitHub Actions runners for your own repos, with a persistent cache. Keep one around or make it
+            ephemeral for a single job. You register it with your own GitHub; af never holds the token.</p>
+        </div>
+        <div class="card">
+          <div class="icon">◎</div>
+          <h3>A private Lane</h3>
+          <p>Everything you create lives in your Lane. Nobody else can see or reach it, it is reachable only from your
+            own devices over a private network, and isolation between Lanes is audited.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  <a class="product" href="https://sidequesting.club">
-    <div class="pk">Now live</div>
-    <div class="pt">SideQuesting</div>
-    <p class="pd">Real-world quests, daily goals, and people who keep you honest. Do hard things, every day.</p>
-  </a>
+  <section id="agents">
+    <div class="wrap split">
+      <div>
+        <h2>Built to be driven by coding agents.</h2>
+        <p class="sub">Claude Code, Codex and others run <code>af</code> under your user, with exactly your Lane's
+          rights and no more. Give your agent one line:</p>
+        <p class="quote">Read <code>https://docs.atominfra.com/llms.txt</code> and use <code>af</code> to manage my
+          machines.</p>
+        <p class="note">The whole docs site is published as <code>llms.txt</code>, <code>llms-full.txt</code> and
+          <code>llms-small.txt</code>, and the same guide ships inside the npm package.</p>
+      </div>
+      <ul class="rules">
+        <li><b>Stable JSON everywhere.</b> Every command takes <code>--json</code>; errors carry a code and what to do
+          about it.</li>
+        <li><b>Safe to retry.</b> Creating a machine that already exists returns it, so a timeout never makes a
+          duplicate.</li>
+        <li><b>Hard to break things.</b> Deleting a Box needs <code>--confirm &lt;name&gt;</code>. A Box holds your
+          work.</li>
+        <li><b>Secrets stay with you.</b> Tokens go in on stdin, are used once, and are never stored. The agent never
+          holds your GitHub credential.</li>
+        <li><b>Knows when to upgrade.</b> <code>version.json</code> tells an agent whether its <code>af</code> is
+          current, and whether it must upgrade.</li>
+      </ul>
+    </div>
+  </section>
 
-  <footer>
-    <div>Contact: <a href="mailto:hello@atominfra.com">hello@atominfra.com</a></div>
-    <div class="legal">Ambition Forge Private Limited · India</div>
-  </footer>
+  <section id="sizes">
+    <div class="wrap split">
+      <div>
+        <h2>Sizes that fit the job.</h2>
+        <p class="sub">CPU and RAM grow and shrink. Disk only grows. Your Lane has its own cores and caps on RAM, disk
+          and machines, and every cap can be raised.</p>
+      </div>
+      <div>
+        <table>
+          <thead><tr><th>Size</th><th>vCPU</th><th>RAM</th><th>Disk</th></tr></thead>
+          <tbody>
+            <tr><td>S</td><td>4</td><td>8 GB</td><td>50 GB</td></tr>
+            <tr><td>M</td><td>8</td><td>16 GB</td><td>100 GB</td></tr>
+            <tr><td>L</td><td>12</td><td>32 GB</td><td>200 GB</td></tr>
+            <tr><td>CI</td><td>Your Lane's</td><td>16 GB</td><td>50 GB</td></tr>
+          </tbody>
+        </table>
+        <p class="note">CI is a size for Runners only, sharing your Lane's CPUs.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="never">
+    <div class="wrap">
+      <h2>What af will never do.</h2>
+      <p class="sub">Promises, not settings.</p>
+      <ul class="never">
+        <li>Show you, or let you reach, another Lane.</li>
+        <li>Hold your GitHub token or any other credential.</li>
+        <li>Open a public port. Your machines reach the internet; the internet doesn't reach them.</li>
+        <li>Pretend snapshots are backups. Keep your work in git and pushed.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="cta">
+    <div class="wrap">
+      <h2>Get your Lane.</h2>
+      <p class="sub">atominfra is invite-only for now. Tell us who you are and what you're building, and we'll set
+        you up.</p>
+      <div class="ctas">
+        <a class="btn" href="mailto:hello@atominfra.com?subject=atominfra%20access">Request access</a>
+        <a class="btn ghost" href="https://docs.atominfra.com/">Read the docs</a>
+      </div>
+    </div>
+  </section>
 </main>
+
+<footer>
+  <div class="wrap row">
+    <div>
+      <div><a class="logo" href="/" style="font-size:15px"><img src="/favicon.svg" alt="" style="width:20px;height:20px">atominfra</a></div>
+      <div style="margin-top:8px">Ambition Forge Private Limited · India</div>
+    </div>
+    <div class="cols">
+      <a href="https://docs.atominfra.com/">Docs</a>
+      <a href="https://docs.atominfra.com/reference/changelog/">Changelog</a>
+      <a href="https://docs.atominfra.com/reference/acceptable-use/">Acceptable use</a>
+      <a href="https://www.npmjs.com/package/@atominfra/af">npm</a>
+      <a href="mailto:hello@atominfra.com">hello@atominfra.com</a>
+    </div>
+  </div>
+  <div class="wrap" style="margin-top:18px">Also from Ambition Forge: <a href="https://sidequesting.club">SideQuesting</a>.</div>
+</footer>
 </body>
 </html>
